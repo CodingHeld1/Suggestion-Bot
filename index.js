@@ -8,13 +8,16 @@ const config = require('./config.json')
 
 //Variables 
 let prefix = '!'
-
+let yes = '<a:rtick:629124378700939315>'
+let no = '<a:rcross:629124462717173781>'
+let temote = '<:pepenotes:905889855567986778>'
+let intro = `To make a suggestion, use ${prefix}suggest (suggestion here). Any other messages do not belong in this channel`
 client.once('ready', () => {
 console.log(`\nPrefix:${prefix} \nName: ${client.user.tag}\n `);
 client.user.setPresence({
     status: 'online',
     activity: {
-        name: 'new suggestions',
+        name: `${prefix}suggest | new suggestions`,
        type: 'WATCHING',
 }})
 })
@@ -33,6 +36,22 @@ const s_channel = client.channels.cache.get("965957179393867786"); //for testing
   }
 
 
+if (command === 'suggestion'){
+if (!args) return message.channel.send(`You did not provide any suggestion\nCorrect usage of the command: ${prefix}suggest my suggestion`)
+let suggestion = args
+let embed = new MessageEmbed()
+.setTitle(`${temote} New Suggestion`)
+.setDescription('Submitter: ' + message.author.tag)
+.addField('Content:', suggestion)
+s_channel.send(embed)
+
+
+
+
+
+
+
+}
 
 
 })
