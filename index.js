@@ -25,7 +25,8 @@ if (!message.content.includes(prefix)) return
 	const command = args.shift().toLowerCase();
   if (!message.guild) return 
   if (message.author.bot) return;
-const s_channel = client.channels.cache.get("965957179393867786"); //for testing 
+const s_channel = client.channels.cache.get("965957179393867786"); //for testing
+const staff = client.channels.cache.get("965719796983402536"); 
 
   if (command === 'test'){
     message.channel.send('Test completed!')  
@@ -41,6 +42,7 @@ let embed = new MessageEmbed()
 .setTimestamp()
 .setFooter({ text: `${message.author.id}`, iconURL: `${message.author.avatarURL()}` });
 const ms = await s_channel.send({ embeds: [embed]})
+const ms2 = await staff.send({embeds:[embed]})
 ms.react(yes)
 .then(() => ms.react(no))
 }
