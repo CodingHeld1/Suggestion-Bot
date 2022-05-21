@@ -4,8 +4,6 @@ const { Client, Intents, MessageEmbed } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 const config = require('./config.json')
 
-
-
 //Variables 
 let prefix = '-'
 let yes = '<a:rtick:629124378700939315>'
@@ -21,9 +19,7 @@ client.user.setPresence({
        type: 'WATCHING',
 }})
 })
-
-
-client.on('messageCreate' , message => {
+client.on('messageCreate' , async message => {
 if (!message.content.includes(prefix)) return
 	const args = message.content.slice(prefix.length).trim().split(/ +/);
 	const command = args.shift().toLowerCase();
@@ -35,28 +31,18 @@ const s_channel = client.channels.cache.get("965957179393867786"); //for testing
     message.channel.send('Test completed!')  
   }
 
-
-
 if (command === 'suggestion'){
 if (!args) return message.channel.send(`You did not provide any suggestion\nCorrect usage of the command: ${prefix}suggest my suggestion`)
 let suggestion = args.join(" ")
-
 let embed = new MessageEmbed()
 .setTitle(`${temote}New Suggestion`)
 .setDescription('Submitter: ' + message.author.tag)
 .addField('Content:', `${suggestion}`)
-s_channel.send({ embeds: [embed] })
-
-
-
-
-
-
-
-
+.setTimestamp()
+.setFooter({ text: `${message.author.id}`, iconURL: `${message.author.avatarURL()}` });
+const ms = await s_channel.send({ embeds: [embed]})
+ms.react(yes)
+.then(() => ms.react(no))
 }
-
-
 })
-
 client.login(config.token)
