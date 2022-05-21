@@ -7,7 +7,7 @@ const config = require('./config.json')
 
 
 //Variables 
-let prefix = '!'
+let prefix = '-'
 let yes = '<a:rtick:629124378700939315>'
 let no = '<a:rcross:629124462717173781>'
 let temote = '<:pepenotes:905889855567986778>'
@@ -24,7 +24,7 @@ client.user.setPresence({
 
 
 client.on('messageCreate' , message => {
-
+if (!message.content.includes(prefix)) return
 	const args = message.content.slice(prefix.length).trim().split(/ +/);
 	const command = args.shift().toLowerCase();
   if (!message.guild) return 
@@ -36,14 +36,17 @@ const s_channel = client.channels.cache.get("965957179393867786"); //for testing
   }
 
 
+
 if (command === 'suggestion'){
 if (!args) return message.channel.send(`You did not provide any suggestion\nCorrect usage of the command: ${prefix}suggest my suggestion`)
-let suggestion = args
+let suggestion = args.join(" ")
+
 let embed = new MessageEmbed()
-.setTitle(`${temote} New Suggestion`)
+.setTitle(`${temote}New Suggestion`)
 .setDescription('Submitter: ' + message.author.tag)
-.addField('Content:', suggestion)
-s_channel.send(embed)
+.addField('Content:', `${suggestion}`)
+s_channel.send({ embeds: [embed] })
+
 
 
 
