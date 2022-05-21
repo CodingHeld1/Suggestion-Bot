@@ -1,7 +1,10 @@
 'use strict';
 const discord = require('discord.js')
 const { Client, Intents, MessageEmbed } = require('discord.js');
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const client = new Client({
+	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],
+	partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
+});
 const config = require('./config.json')
 
 //Variables 
@@ -27,6 +30,11 @@ client.user.setPresence({
 }})
 })
 client.on('messageCreate' , async message => {
+    if(message.channel.id === "965957179393867786"){
+        if (!message.author.bot) return
+            message.react(yes)
+            message.react(no)
+}
 if (!message.content.includes(prefix)) return
 	const args = message.content.slice(prefix.length).trim().split(/ +/);
 	const command = args.shift().toLowerCase();
@@ -40,20 +48,15 @@ const staff = client.channels.cache.get("965719796983402536");
   }
 
 if (command === 'suggest'){
+    message.delete()
 if (!args) return message.channel.send(`You did not provide any suggestion\nCorrect usage of the command: ${prefix}suggest my suggestion`)
 let suggestion = args.join(" ")
-let embed = new MessageEmbed()
-.setTitle(`> ${temote} New Suggestion`)
-.setDescription('Submitter: ' + message.author.tag)
-.addField('Content:', `${suggestion}`)
-.setTimestamp()
-.setFooter({ text: `${message.author.id}`, iconURL: `${message.author.avatarURL()}` });
-const ms = await s_channel.send({ embeds: [embed]})
-ms.react(yes)
-.then(() => ms.react(no))
 
 
 
+const filter = (reaction, user) => {
+	return ['👍', '👎'].includes(reaction.emoji.name) && user.id != client.user.id 
+};
 let embed1 = new MessageEmbed()
 .setTitle(`> ${temote} New Suggestion`)
 .setDescription('Submitter: ' + message.author.tag+`\nReact with ${yes} to approve the suggestion`)
@@ -61,14 +64,54 @@ let embed1 = new MessageEmbed()
 .setTimestamp()
 .setFooter({ text: `${message.author.id}`, iconURL: `${message.author.avatarURL()}` });
 const ms2 = await staff.send({embeds:[embed1]})
-ms2.react(yes)
-.then(() => ms2.react(no))
+ms2.react('👍')
+.then(() => ms2.react('👎'))
+
+
+ms2.awaitReactions({ filter, max: 1, errors: ['time'] })
+	.then(collected => {
+		const reaction = collected.first();
+
+		if (reaction.emoji.name === '👍') {
+			staff.send(`${yes} The suggestion has been approved sucessfully`).then(m => setTimeout(() => { m.delete() }, 5000))
+            const embed = new MessageEmbed()
+            .setTitle(`> The suggestion has been approved`)
+            .setDescription('Submitter: ' + message.author.tag+`\nReact with ${yes} to approve the suggestion`)
+            .addField('Content:', `${suggestion}`)
+            .setTimestamp()
+            .setFooter({ text: `${message.author.id}`, iconURL: `${message.author.avatarURL()}` });
+            ms2.edit({ embeds: [embed] });
+            let embed1 = new MessageEmbed()
+                .setTitle(`> ${temote} New Suggestion`)
+                .setDescription('Submitter: ' + message.author.tag)
+                .addField('Content:', `${suggestion}`)
+                .setTimestamp()
+                .setFooter({ text: `${message.author.id}`, iconURL: `${message.author.avatarURL()}` });
+                s_channel.send({ embeds: [embed1]})
+
+		} else {
+            staff.send(`${no} The suggestion has been denied sucessfully`).then(m => setTimeout(() => { m.delete() }, 5000))
+            const embed = new MessageEmbed()
+            .setTitle(`> The suggestion has been denied`)
+            .setDescription('Submitter: ' + message.author.tag+`\nReact with ${yes} to approve the suggestion`)
+            .addField('Content:', `${suggestion}`)
+            .setTimestamp()
+            .setFooter({ text: `${message.author.id}`, iconURL: `${message.author.avatarURL()}` });
+            ms2.edit({ embeds: [embed] });
+		}
+	})
+	.catch(collected => {
+        staff.send('You reacted with neither a thumbs up, nor a thumbs down.');
+	});
 
 
 
+    
 
 
 
 }
+
+
 })
 client.login(config.token)
