@@ -119,25 +119,30 @@ ms2.awaitReactions({ filter, max: 1, errors: ['time'] })
 	.catch(collected => {
         return
 	});
-
-
-
-    
-
-
-
 }
-
-
 })
-
 client.on('messageCreate' , async message => {
     if(message.channel.id === "965957179393867786"){
         if (!message.author.bot) return
             message.react(yes)
             message.react(no)
-}
-})
+}})
 
+client.on('messageCreate' , async message => {
+    if (!message.content.includes(prefix)) return
+	const args = message.content.slice(prefix.length).trim().split(/ +/);
+	const command = args.shift().toLowerCase();
+  if (!message.guild) return 
+  if (message.author.bot) return;
+
+  if (command === 'help'){
+      let embed = new MessageEmbed()
+      .setTitle('Help menu')
+      .setFooter({ text: `${message.author.id}`, iconURL: `${message.author.avatarURL()}` })
+      .addField(`> **${prefix}suggest`,'Adds a suggestion')
+      message.channel.send({embeds: [embed]})
+  }
+    
+})
 
 client.login(config.token)
