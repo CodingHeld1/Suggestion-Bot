@@ -15,7 +15,7 @@ let prefix = '-'
 // let temote = '<:pepenotes:905889855567986778>'
 
 //testing emotes
-//Lifeboat server emotes
+//test server emotes
 let yes = '<a:rtick:977633786051330078>'
 let no = '<a:rcross:977633814325125210>'
 let temote = '<:pepenotes:977633753688080435>'
