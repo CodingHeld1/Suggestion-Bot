@@ -22,12 +22,7 @@ let temote = '<:pepenotes:977633753688080435>'
 let intro = `To make a suggestion, use ${prefix}suggest (suggestion here). Any other messages do not belong in this channel`
 client.once('ready', () => {
 console.log(`\nPrefix:${prefix} \nName: ${client.user.tag}\n `);
-client.user.setPresence({
-    status: 'online',
-    activity: {
-        name: `${prefix}suggest | new suggestions`,
-       type: 'WATCHING',
-}})
+client.user.setPresence({ activities: [{ name: 'with new suggestions' }],type: 'WATCHING', status: 'dnd' });
 })
 
 
